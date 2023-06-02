@@ -87,7 +87,7 @@ module ClienteAPI
 
           basic = Base64.encode64(client_id + ":" + client_secret).force_encoding('UTF-8')
 
-          headerBasic = {Authorization: 'BASIC ' + basic}
+          headerBasic = {Authorization: "BASIC #{basic}"}
 
           reponse = RestClient::Request.execute(method: :get, 
                                                url: "#{ClienteAPI::Base::URL_BASE}/basic_auth", 
@@ -96,7 +96,7 @@ module ClienteAPI
 
           respJson = JSON.parse(response)
 
-          headerBearer = {Authorization: respJson["token_type"] + " " + respJson["access_token"]}          
+          headerBearer = {Authorization: "#{parseJson['token_type']} #{parseJson['access_token']}"}          
 
           headerBearer.to_h
         end
