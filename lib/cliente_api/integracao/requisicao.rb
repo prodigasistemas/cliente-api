@@ -81,7 +81,7 @@ module ClienteAPI
           entidade
         end
 
-        def basic_auth
+        def self.basic_auth
           client_id = ENV['CLIENT_ID']
           client_secret = ENV['CLIENT_SECRET']
 
