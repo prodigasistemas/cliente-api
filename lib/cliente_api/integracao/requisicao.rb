@@ -90,7 +90,7 @@ module ClienteAPI
           headerBasic = {Authorization: 'BASIC ' + basic}
 
           reponse = RestClient::Request.execute(method: :get, 
-                                               url: build_url('/basic_auth'), 
+                                               url: "#{ClienteAPI::Base::URL_BASE}/basic_auth", 
                                                read_timeout: 300,
                                                headers: headerBasic.to_h)
 
