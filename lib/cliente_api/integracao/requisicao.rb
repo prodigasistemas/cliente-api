@@ -87,9 +87,9 @@ module ClienteAPI
 
           basic = Base64.encode64(client_id + ":" + client_secret).force_encoding('UTF-8')
 
-          header = "{Authorization: BASIC " + basic + "}"
+          header = {Authorization: "BASIC " + basic}
 
-          JSON.parse(header).to_h
+          header.to_h
         end
 
       end
