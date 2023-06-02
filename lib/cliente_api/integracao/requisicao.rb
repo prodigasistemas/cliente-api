@@ -1,18 +1,20 @@
+require 'base64'
+
 module ClienteAPI
   module Integracao
     module Requisicao
       def get(path=[], params = {})
         if params.any?
-          response = RestClient.get filter_url + params.to_query
+          response = RestClient.get filter_url + params.to_query, basic_auth()
         else
-          response = RestClient.get build_url(path)
+          response = RestClient.get build_url(path), basic_auth()
         end
 
         JSON.parse(response.body)
       end
 
       def get_relations(path=[], params = {})
-        response = RestClient.get relations_url + params.to_query
+        response = RestClient.get relations_url + params.to_query, basic_auth()
         JSON.parse(response.body)
       end
 
@@ -20,22 +22,23 @@ module ClienteAPI
         query = { query: params.merge(page_params) }
         response = RestClient::Request.execute(method: :get, 
                                                url: build_url(path) + "?" + query.to_query, 
-                                               read_timeout: 300)
+                                               read_timeout: 300,
+                                               headers: basic_auth())
         JSON.parse(response.body)
       end
 
       def post(path=[], params={})
-        response = RestClient.post build_url(path), params.try(:to_h)
+        response = RestClient.post build_url(path), params.try(:to_h), basic_auth()
         JSON.parse(response.body)
       end
 
       def put(path=[], params={})
-        response = RestClient.put build_url(path), params.try(:to_h)
+        response = RestClient.put build_url(path), params.try(:to_h), basic_auth()
         JSON.parse(response.body)
       end
 
       def delete(path=[])
-        response = RestClient.delete build_url(path)
+        response = RestClient.delete build_url(path), basic_auth()
         JSON.parse(response.body)
       end
 
@@ -76,6 +79,17 @@ module ClienteAPI
           end
 
           entidade
+        end
+
+        def basic_auth
+          client_id = ENV['CLIENT_ID']
+          client_secret = ENV['CLIENT_SECRET']
+
+          basic = Base64.encode64(client_id + client_secret)
+
+          header = "{Authorization: BASIC " + basis + "}"
+
+          JSON.parse(header)
         end
 
       end
