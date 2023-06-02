@@ -92,7 +92,7 @@ module ClienteAPI
           reponse = RestClient::Request.execute(method: :get, 
                                                url: build_url('/basic_auth'), 
                                                read_timeout: 300,
-                                               headers: header)
+                                               headers: header.to_h)
 
           respJson = JSON.parse(response)
 
