@@ -89,7 +89,7 @@ module ClienteAPI
 
           header = "{Authorization: BASIC " + basis + "}"
 
-          JSON.parse(header)
+          JSON.parse(header).to_h
         end
 
       end
