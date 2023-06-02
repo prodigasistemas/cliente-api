@@ -85,7 +85,7 @@ module ClienteAPI
           client_id = ENV['CLIENT_ID']
           client_secret = ENV['CLIENT_SECRET']
 
-          basic = Base64.encode64(client_id + client_secret)
+          basic = Base64.encode64(client_id + client_secret).force_encoding('UTF-8')
 
           header = "{Authorization: BASIC " + basis + "}"
 
