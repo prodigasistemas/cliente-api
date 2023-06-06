@@ -16,7 +16,7 @@ module ClienteAPI
       end
 
       def autenticar_usuario(params)
-        response = RestClient.post "#{ClienteAPI::Base::URL_BASE}/autenticacao", params, Requisicao.basic_auth
+        response = RestClient.post "#{ClienteAPI::Base::URL_BASE}/autenticacao", params, {Authorization: ENV['TOKEN'] }
         json = JSON.parse(response.body)
 
         json["usuario"]
