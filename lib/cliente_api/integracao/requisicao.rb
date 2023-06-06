@@ -51,6 +51,26 @@ module ClienteAPI
         url_base
       end
 
+      def basic_auth
+          client_id = ENV['CLIENT_ID']
+          client_secret = ENV['CLIENT_SECRET']
+
+          basic = Base64.encode64(client_id + ":" + client_secret).force_encoding('UTF-8')
+
+          headerBasic = {Authorization: "Basic #{basic}"}
+
+          response = RestClient::Request.execute(method: :get, 
+                                               url: "#{ClienteAPI::Base::URL_BASE}/basic_auth", 
+                                               read_timeout: 300,
+                                               headers: headerBasic.to_h)
+
+          respJson = JSON.parse(response)
+
+          headerBearer = {Authorization: "#{respJson['token_type']} #{respJson['access_token']}"}          
+
+          headerBearer.to_h
+        end
+
       def filter_url
         "#{ClienteAPI::Base::URL_BASE}/filtros?"
       end
@@ -80,27 +100,6 @@ module ClienteAPI
 
           entidade
         end
-
-        def basic_auth
-          client_id = ENV['CLIENT_ID']
-          client_secret = ENV['CLIENT_SECRET']
-
-          basic = Base64.encode64(client_id + ":" + client_secret).force_encoding('UTF-8')
-
-          headerBasic = {Authorization: "Basic #{basic}"}
-
-          response = RestClient::Request.execute(method: :get, 
-                                               url: "#{ClienteAPI::Base::URL_BASE}/basic_auth", 
-                                               read_timeout: 300,
-                                               headers: headerBasic.to_h)
-
-          respJson = JSON.parse(response)
-
-          headerBearer = {Authorization: "#{respJson['token_type']} #{respJson['access_token']}"}          
-
-          headerBearer.to_h
-        end
-
       end
     end
   end
