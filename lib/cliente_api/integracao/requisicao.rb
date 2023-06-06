@@ -5,16 +5,16 @@ module ClienteAPI
     module Requisicao
       def get(path=[], params = {})
         if params.any?
-          response = RestClient.get filter_url + params.to_query, {Authorization: ENV['TOKEN'] }.to_h
+          response = RestClient.get filter_url + params.to_query, basic_auth
         else
-          response = RestClient.get build_url(path), {Authorization: ENV['TOKEN'] }.to_h
+          response = RestClient.get build_url(path), basic_auth
         end
 
         JSON.parse(response.body)
       end
 
       def get_relations(path=[], params = {})
-        response = RestClient.get relations_url + params.to_query, {Authorization: ENV['TOKEN'] }.to_h
+        response = RestClient.get relations_url + params.to_query, basic_auth
         JSON.parse(response.body)
       end
 
@@ -23,22 +23,22 @@ module ClienteAPI
         response = RestClient::Request.execute(method: :get, 
                                                url: build_url(path) + "?" + query.to_query, 
                                                read_timeout: 300,
-                                               headers: {Authorization: ENV['TOKEN'] }.to_h)
+                                               headers: basic_auth)
         JSON.parse(response.body)
       end
 
       def post(path=[], params={})
-        response = RestClient.post build_url(path), params.try(:to_h), {Authorization: ENV['TOKEN'] }.to_h
+        response = RestClient.post build_url(path), params.try(:to_h), basic_auth
         JSON.parse(response.body)
       end
 
       def put(path=[], params={})
-        response = RestClient.put build_url(path), params.try(:to_h), {Authorization: ENV['TOKEN'] }.to_h
+        response = RestClient.put build_url(path), params.try(:to_h), basic_auth
         JSON.parse(response.body)
       end
 
       def delete(path=[])
-        response = RestClient.delete build_url(path), {Authorization: ENV['TOKEN'] }.to_h
+        response = RestClient.delete build_url(path), basic_auth
         JSON.parse(response.body)
       end
 
@@ -96,7 +96,7 @@ module ClienteAPI
 
           respJson = JSON.parse(response)
 
-          headerBearer = {Authorization: "#{parseJson['token_type']} #{parseJson['access_token']}"}          
+          headerBearer = {Authorization: "#{respJson['token_type']} #{respJson['access_token']}"}          
 
           headerBearer.to_h
         end
