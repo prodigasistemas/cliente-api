@@ -5,16 +5,16 @@ module ClienteAPI
     module Requisicao
       def get(path=[], params = {})
         if params.any?
-          response = RestClient.get filter_url + params.to_query, self.basic_auth
+          response = RestClient.get filter_url + params.to_query, basic_auth
         else
-          response = RestClient.get build_url(path), self.basic_auth
+          response = RestClient.get build_url(path), basic_auth
         end
 
         JSON.parse(response.body)
       end
 
       def get_relations(path=[], params = {})
-        response = RestClient.get relations_url + params.to_query, self.basic_auth
+        response = RestClient.get relations_url + params.to_query, basic_auth
         JSON.parse(response.body)
       end
 
@@ -23,17 +23,17 @@ module ClienteAPI
         response = RestClient::Request.execute(method: :get, 
                                                url: build_url(path) + "?" + query.to_query, 
                                                read_timeout: 300,
-                                               headers: self.basic_auth)
+                                               headers: basic_auth)
         JSON.parse(response.body)
       end
 
       def post(path=[], params={})
-        response = RestClient.post build_url(path), params.try(:to_h), self.basic_auth
+        response = RestClient.post build_url(path), params.try(:to_h), basic_auth
         JSON.parse(response.body)
       end
 
       def put(path=[], params={})
-        response = RestClient.put build_url(path), params.try(:to_h), self.basic_auth
+        response = RestClient.put build_url(path), params.try(:to_h), basic_auth
         JSON.parse(response.body)
       end
 
@@ -81,13 +81,13 @@ module ClienteAPI
           entidade
         end
 
-        def self.basic_auth
+        def basic_auth
           client_id = ENV['CLIENT_ID']
           client_secret = ENV['CLIENT_SECRET']
 
           basic = Base64.encode64(client_id + ":" + client_secret).force_encoding('UTF-8')
 
-          headerBasic = {Authorization: "BASIC #{basic}"}
+          headerBasic = {Authorization: "Basic #{basic}"}
 
           response = RestClient::Request.execute(method: :get, 
                                                url: "#{ClienteAPI::Base::URL_BASE}/basic_auth", 
